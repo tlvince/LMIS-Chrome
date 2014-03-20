@@ -68,7 +68,7 @@
         </h3>
       </div>
     </div>
-    <form ng-submit="save()">
+    <form>
       <div class="row">
         <div class="col-sm-12" ng-hide="preview">
           <div class="row">
@@ -142,12 +142,31 @@
             </div>
           </div>
 
+          <div ng-show"synched">
+             <p>DB synched with remote. Check it out:</p>
+             <a href="https://ehealth.iriscouch.com/_utils/index.html" target="_blank">Admin panel</a>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <h3>Local DB</h3>
+              <span>Total: {{local.total_rows}}</span>
+              <pre class="pre-scrollable">{{local | json}}</pre>
+            </div>
+            <div class="col-md-6">
+              <h3>Remote DB</h3>
+              <span>Total: {{remote.total_rows}}</span>
+              <pre class="pre-scrollable">{{remote | json}}</pre>
+            </div>
+          </div>
+
           <div class="row">
             <div class="col-sm-12 date-row">
               <button type="button" class="btn btn-lg btn-default" ng-click="preview=!preview">
                   <i class="fa fa-chevron-circle-left"></i> Back to form
               </button>
-              <button class="btn btn-success btn-lg">Confirm and Save <i class="fa fa-save"></i></button>
+              <button class="btn btn-success btn-lg" ng-click="save()">Confirm and Save <i class="fa fa-save"></i></button>
+              <button class="btn btn-warning btn-lg" ng-click="clear()">Clear</button>
             </div>
           </div>
         </div>

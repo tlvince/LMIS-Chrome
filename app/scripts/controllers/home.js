@@ -9,21 +9,20 @@ angular.module('lmisChromeApp')
       abstract: true,
       templateUrl: 'views/home/index.html',
       resolve: {
-        currentFacility: function (facilityFactory) {
-          return facilityFactory.getCurrentFacility();
+        currentFacility: function ($q) {
+          var deferred = $q.defer();
+          deferred.resolve({name: 'Kano'});
+          return deferred.promise;
         },
-        facilityLocation: function (currentFacility, locationsFactory) {
-          return locationsFactory.get(currentFacility.location);
-        },
-        todayStockCount: function (stockCountFactory) {
-          var today = new Date();
-          return stockCountFactory.getStockCountByDate(today);
+        facilityLocation: function ($q) {
+          var deferred = $q.defer();
+          deferred.resolve({name: 'Giginyu'});
+          return deferred.promise;
         }
       },
-      controller: function($scope, currentFacility, facilityLocation, todayStockCount) {
+      controller: function($scope, currentFacility, facilityLocation) {
         $scope.facility = currentFacility.name + ' (' +
           facilityLocation.name + ')';
-        $scope.hasPendingStockCount = (todayStockCount === null);
       }
     })
     .state('home.index', {

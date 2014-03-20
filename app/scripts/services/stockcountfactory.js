@@ -31,21 +31,21 @@ angular.module('lmisChromeApp')
     var programProducts= [
       'BCG doses',
       'BCG Diluent',
-      'Hep.B doses',
-      'OPV doses',
-      'PENTA doses',
-      'PCV doses',
-      'Measles doses',
-      'Measles Diluent',
-      'Yellow Fever doses',
-      'Yellow Fever Diluent',
-      'CSM doses',
-      'CSM Diluent',
-      'Tetanus Toxoid doses',
-      'BCG Syringes',
-      'Auto Disable Syringes',
-      '5mls Syringes',
-      'Safety boxes'
+      // 'Hep.B doses',
+      // 'OPV doses',
+      // 'PENTA doses',
+      // 'PCV doses',
+      // 'Measles doses',
+      // 'Measles Diluent',
+      // 'Yellow Fever doses',
+      // 'Yellow Fever Diluent',
+      // 'CSM doses',
+      // 'CSM Diluent',
+      // 'Tetanus Toxoid doses',
+      // 'BCG Syringes',
+      // 'Auto Disable Syringes',
+      // '5mls Syringes',
+      // 'Safety boxes'
     ];
     var addRecord={
       /**

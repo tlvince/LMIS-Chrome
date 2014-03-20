@@ -11,8 +11,12 @@ angular.module('lmisChromeApp')
         templateUrl: 'views/stockcount/index.html',
         controller:'StockCountCtrl',
         resolve:{
-          currentFacility: function(facilityFactory){
-            return facilityFactory.getCurrentFacility();
+          currentFacility: function($q){
+            var deferred = $q.defer();
+            deferred.resolve({
+              'uuid': 'd48a39fb-6d37-4472-9983-bc0720403719'
+            });
+            return deferred.promise;
           }
         }
       })
@@ -37,8 +41,12 @@ angular.module('lmisChromeApp')
         templateUrl: 'views/stockcount/step_entry_form.html',
         controller: 'StockCountCtrl',
         resolve:{
-          currentFacility: function(facilityFactory){
-            return facilityFactory.getCurrentFacility();
+          currentFacility: function($q){
+            var deferred = $q.defer();
+            deferred.resolve({
+              'uuid': 'd48a39fb-6d37-4472-9983-bc0720403719'
+            });
+            return deferred.promise;
           }
         }
       })
@@ -242,7 +250,7 @@ angular.module('lmisChromeApp')
     };
 
   })
-  .controller('StockCountStepsFormCtrl', function($scope,stockCountFactory, $state, alertsFactory){
+  .controller('StockCountStepsFormCtrl', function($scope,stockCountFactory, $state, alertsFactory, pouchdb, $log){
 
     $scope.preview = false;
     $scope.selectedProduct = '';
@@ -297,4 +305,58 @@ angular.module('lmisChromeApp')
             });
         });
     }
+
+    var name = 'stock-count';
+    var db = pouchdb.create(name);
+    var remote = 'https://ehealth.iriscouch.com/' + name;
+    $scope.synched = false;
+
+    // PouchDB demo
+    $scope.save = function() {
+      db.post($scope.stockCount)
+        .then(function(result) {
+          alertsFactory.add({
+            message: 'Saved',
+            type: 'success'
+          });
+          db.allDocs({include_docs: true})
+            .then(function(docs) {
+              $scope.local = docs;
+            });
+        })
+        .then(function() {
+          db.replicate.to(remote, {complete: function() {
+            alertsFactory.add({
+              message: 'PouchDB synched',
+              type: 'success'
+            });
+            $scope.synched = true;
+
+            var remoteDB = pouchdb.create(remote);
+            remoteDB.allDocs({include_docs: true})
+              .then(function(docs) {
+                $scope.remote = docs;
+              })
+              .catch(function(reason) {
+                $log.error(reason);
+              });
+
+          }});
+        })
+        .catch(function(reason) {
+          $log.error(reason);
+        });
+    };
+
+    $scope.clear = function() {
+      db.destroy()
+        .then(function() {
+          console.log('as');
+          $scope.local = {};
+        })
+        .catch(function(reason) {
+          $log.error(reason);
+        });
+    };
+
     });
