@@ -347,6 +347,17 @@ module.exports = function(grunt) {
         src: '<%= yeoman.app %>',
         dest: '<%= yeoman.dist %>'
       }
+    },
+
+    bumpAndroid: {
+      options: {
+        files: ['app/manifest.mobile.json'],
+        commit: true,
+        commitMessage: 'Bump Android version code to v%VERSION%',
+        commitFiles: ['app/manifest.mobile.json'],
+        createTag: false,
+        push: false
+      }
     }
   });
 
@@ -412,5 +423,4 @@ module.exports = function(grunt) {
     'test',
     'coveralls'
   ]);
-
 };
