@@ -12,17 +12,17 @@ notifications:
 before_deploy:
 - ./scripts/build.sh
 deploy:
-  - provider: s3
-    access_key_id: AKIAINSUTVOB4CPQYP2A
-    secret_access_key:
-      secure: XrbpZx+nephhd1+uIWGYZPblAE1N4h1XJR0mYpT5GhMZ2rW449bHuBi0lCk3tgo7t+5/z0L78PNpEVjWh7hSPpSazCQpNaZVsV0oooSvZwSHkpowUjbgeu9D041vWIhmyyeyzY7doPkAtiCxUpt0nwqEk3LdvFbyNWimuE7P/2s=
-    bucket: eha-lomis
-    local-dir: build/lomis/build
-    skip_cleanup: true
-    region: eu-west-1
-    on:
-      all_branches: true
-      repo: tlvince/LMIS-Chrome
+  provider: s3
+  access_key_id: AKIAINSUTVOB4CPQYP2A
+  secret_access_key:
+    secure: XrbpZx+nephhd1+uIWGYZPblAE1N4h1XJR0mYpT5GhMZ2rW449bHuBi0lCk3tgo7t+5/z0L78PNpEVjWh7hSPpSazCQpNaZVsV0oooSvZwSHkpowUjbgeu9D041vWIhmyyeyzY7doPkAtiCxUpt0nwqEk3LdvFbyNWimuE7P/2s=
+  bucket: eha-lomis
+  local-dir: build/lomis/build
+  skip_cleanup: true
+  region: eu-west-1
+  on:
+    all_branches: true
+    repo: tlvince/LMIS-Chrome
 env:
   global:
     - secure: S0InX7HaaIhLvsPFkdDg4T4yS9u5fbzkAZZEsfju8/3J8hl65rIyexGKF+8QTdgjV4XR3VmeohZfYlXCudp3CBHHD5OKOSZMfcvmImcXpGNaGz6bsarG83vqN1hMuHfrx7eofQgksAgRIwV5V0iU7Zo2O3vYjjCA2gh9y0t/w6o=
