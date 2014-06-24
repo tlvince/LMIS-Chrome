@@ -44,9 +44,12 @@ module.exports = function(grunt) {
           '<%= yeoman.app %>/views/**/*.html',
           '<%= yeoman.app %>/manifest.json',
           '<%= yeoman.app %>/_locales/{,*/}*.json',
-          '<%= yeoman.app %>/scripts/{,*/}*.js',
-          '<%= yeoman.app %>/scripts/fixtures/*.json'
+          '<%= yeoman.app %>/scripts/{,*/}*.js'
         ]
+      },
+      fixtures: {
+        files: ['fixtures/*.yaml'],
+        tasks: ['yaml:fixtures', 'concat:fixtures']
       }
     },
 
@@ -148,6 +151,7 @@ module.exports = function(grunt) {
             '<%= yeoman.dist %>/styles/{,*/}*.css',
             '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
             '<%= yeoman.dist %>/styles/fonts/*',
+            '<%= yeoman.dist %>/fixtures.min.json',
             '!<%= yeoman.dist %>/scripts/main*.js',
             '!<%= yeoman.dist %>/images/icon{,-*}.png'
           ]
@@ -258,7 +262,6 @@ module.exports = function(grunt) {
               'images/{,*/}*.{webp}',
               '_locales/{,*/}*.json',
               'media/*',
-              'scripts/fixtures/*.json',
               'manifest.mobile.json'
             ]
           },
@@ -293,7 +296,8 @@ module.exports = function(grunt) {
               'scripts/{,*/}*.js',
               'styles/{,*/}*.css',
               'images/{,*/}*',
-              'bower_components/font-awesome/fonts/*'
+              'bower_components/font-awesome/fonts/*',
+              'fixtures.json'
             ]
           }
         ]
@@ -440,7 +444,34 @@ module.exports = function(grunt) {
 
     jscs: {
       src: '<%= jshint.all %>'
+    },
+
+    yaml: {
+      fixtures: {
+        files: [{
+          expand: true,
+          cwd: 'fixtures',
+          src: '*.yaml',
+          dest: '.tmp/fixtures'
+        }]
+      }
+    },
+
+    concat: {
+      fixtures: {
+        src: '.tmp/fixtures/*.json',
+        dest: '<%= yeoman.app %>/fixtures.json'
+      }
+    },
+
+    minjson: {
+      fixtures: {
+        files: {
+          '<%= yeoman.dist %>/fixtures.min.json': '<%= concat.fixtures.dest %>'
+        }
+      }
     }
+
   });
 
   grunt.registerTask('serve', function(target) {
@@ -452,6 +483,8 @@ module.exports = function(grunt) {
       'clean:server',
       'wiredep',
       'ngconstant:development',
+      'yaml:fixtures',
+      'concat:fixtures',
       'concurrent:server',
       'autoprefixer',
       'connect:livereload',
@@ -481,7 +514,9 @@ module.exports = function(grunt) {
       'clean:dist',
       'wiredep',
       'ngconstant:production',
-      'chromeManifest:dist'
+      'chromeManifest:dist',
+      'yaml:fixtures',
+      'concat:fixtures'
     ];
 
     var release = [
@@ -494,6 +529,7 @@ module.exports = function(grunt) {
       'copy:dist',
       'cssmin',
       'uglify',
+      'minjson',
       'rev',
       'usemin',
       'htmlmin'
