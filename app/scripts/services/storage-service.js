@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lmisChromeApp')
-  .factory('storageService', function ($q, $rootScope, $http, $window, chromeStorageApi, utility) {
+  .factory('storageService', function ($q, $rootScope, $http, $window, chromeStorageApi, utility, collections) {
 
     /**
      *  Global variables used to define table names, with this there will be one
@@ -11,44 +11,11 @@ angular.module('lmisChromeApp')
      *  folder that holds data used to pre-fill local storage if it is empty.
      *
      */
-    var productTypes = 'product_types';
-    var productCategory = 'product_category';
-    var address = 'address';
-    var uom = 'uom';
-    var uomCategory = 'uom_category';
-    var facility = 'facility';
-    var program = 'programs';
-    var programProducts = 'program_products';
-    var facilityType = 'facility_type';
-    var employeeCategory = 'employee_category';
-    var company = 'company';
-    var companyCategory = 'company_category';
-    var currency = 'currencies';
-    var employee = 'employee';
-    var rate = 'rate';
-    var ccuType = 'ccu_type';
-    var ccu = 'ccu';
-    var user = 'user';
-    var productPresentation = 'product_presentation';
-    var productFormulation = 'product_formulations';
-    var modeOfAdministration = 'mode_of_administration';
-    var batches = 'batches';
-    var ccuProblem = 'ccu_problems';
-    var ccuTemperatureLog = 'ccu_temp_log';
-    var productProfile = 'product_profiles';
-    var inventory = 'inventory';
-    var orders = 'orders';
-    var bundles = 'bundle';
-    var bundleLines = 'bundle_lines';
-    var bundleReceipt = 'bundle_receipts';
     var bundleReceiptLines = 'bundle_receipt_lines';
-    var locations = 'locations';
     var stockCount = 'stockcount';
     var discardCount = 'discard_count';
     var appConfig = 'app_config';
-    var stockOut = 'stock_out';
     var surveyResponse = 'survey_response';
-    var ccuProfile = 'ccei';
     var ccuBreakdown = 'ccu_breakdown';
     var pendingSyncs = 'pending_syncs';
 
@@ -256,60 +223,30 @@ angular.module('lmisChromeApp')
     var loadFixtures = function () {
 
       var deferred = $q.defer();
-      var database = [
-        productTypes,
-        address,
-        uom,
-        uomCategory,
-        facility,
-        program,
-        programProducts,
-        facilityType,
-        employeeCategory,
-        company,
-        companyCategory,
-        currency,
-        employee,
-        rate,
-        ccuType,
-        ccu,
-        inventory,
-        ccuProblem,
-        ccuTemperatureLog,
-        user,
-        productCategory,
-        productPresentation,
-        productProfile,
-        productFormulation,
-        modeOfAdministration,
-        batches,
-        orders,
-        bundles,
-        bundleLines,
-        bundleReceipt,
-        locations,
-        stockOut,
-        ccuProfile
-      ];
+      var database = utility.values(collections);
       var isLoading = false;
+
+      var readJSON = function() {
+        var fileUrl = 'fixtures.json';
+        $http.get(fileUrl)
+          .success(function(data) {
+            return data;
+          })
+          .error(function (err) {
+            console.log(err);
+            isLoading = false;
+          });
+      };
 
       function loadData(dbName) {
         getData(dbName)
           .then(function (data) {
             if (angular.isUndefined(data)) {
-              var fileUrl = 'scripts/fixtures/' + dbName + '.json';
-              $http.get(fileUrl)
-                .success(function (data) {
-                  setTable(dbName, data).then(function (res) {
-                    isLoading = false;
-                  }, function (err) {
-                    isLoading = false;
-                  });
-                })
-                .error(function (err) {
-                  console.log(err);
-                  isLoading = false;
-                });
+              setTable(dbName, db[dbName]).then(function (res) {
+                isLoading = false;
+              }, function (err) {
+                isLoading = false;
+              });
             } else {
               isLoading = false;
             }
@@ -336,6 +273,8 @@ angular.module('lmisChromeApp')
           deferred.resolve(true);
         }
       };
+
+      var db = readJSON();
       loadNext(database.length);
       return deferred.promise;
     };
@@ -445,7 +384,7 @@ angular.module('lmisChromeApp')
       return deferred.promise;
     };
 
-    return {
+    var api = {
       all: getAllFromTable,
       add: setData,
       get: getData,
@@ -462,46 +401,14 @@ angular.module('lmisChromeApp')
       find: getFromTableByKey,
       insertBatch: insertBatch,
       getDateTime: getDateTime,
-      PRODUCT_TYPES: productTypes,
-      PRODUCT_CATEGORY: productCategory,
-      ADDRESS: address,
-      UOM: uom,
-      UOM_CATEGORY: uomCategory,
-      FACILITY: facility,
-      PROGRAM: program,
-      PROGRAM_PRODUCTS: programProducts,
-      FACILITY_TYPE: facilityType,
-      EMPLOYEE_CATEGORY: employeeCategory,
-      COMPANY: company,
-      COMPANY_CATEGORY: companyCategory,
-      CURRENCY: currency,
-      EMPLOYEE: employee,
-      RATE: rate,
-      CCU_TYPE: ccuType,
-      CCU: ccu,
-      USER: user,
-      PRODUCT_PRESENTATION: productPresentation,
-      PRODUCT_FORMULATION: productFormulation,
-      MODE_OF_ADMINISTRATION: modeOfAdministration,
-      BATCH: batches,
-      CCU_PROBLEM: ccuProblem,
-      CCU_TEMPERATURE_LOG: ccuTemperatureLog,
-      PRODUCT_PROFILE: productProfile,
-      INVENTORY: inventory,
-      ORDERS: orders,
-      BUNDLE: bundles,
-      BUNDLE_LINES: bundleLines,
-      BUNDLE_RECEIPT: bundleReceipt,
       BUNDLE_RECEIPT_LINES: bundleReceiptLines,
-      LOCATIONS: locations,
       STOCK_COUNT: stockCount,
       DISCARD_COUNT: discardCount,
       APP_CONFIG: appConfig,
-      STOCK_OUT: stockOut,
       SURVEY_RESPONSE: surveyResponse,
-      CCU_PROFILE: ccuProfile,
       CCU_BREAKDOWN: ccuBreakdown,
       PENDING_SYNCS: pendingSyncs
     };
 
+    return angular.extend(api, collections);
   });
