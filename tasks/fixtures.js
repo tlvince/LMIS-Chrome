@@ -6,7 +6,7 @@ var changeCase = require('change-case');
 
 module.exports = function(grunt) {
 
-  var collections = [];
+  var collections = {};
   var loadYaml = function(path) {
     var data = grunt.file.read(path);
     return yaml.safeLoad(data, {
@@ -25,8 +25,9 @@ module.exports = function(grunt) {
         var yaml = loadYaml(src);
 
         var basename = path.basename(src, '.yaml');
+        var constant = changeCase.constantCase(basename);
         var collection = changeCase.camel(basename);
-        collections.push(collection);
+        collections[constant] = collection;
 
         var json = {};
         json[collection] = yaml;
