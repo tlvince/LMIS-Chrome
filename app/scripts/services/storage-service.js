@@ -221,22 +221,10 @@ angular.module('lmisChromeApp')
      * @returns {promise|promise|*|promise|promise}
      */
     var loadFixtures = function () {
-
+      var db;
       var deferred = $q.defer();
       var database = utility.values(collections);
       var isLoading = false;
-
-      var readJSON = function() {
-        var fileUrl = 'fixtures.json';
-        $http.get(fileUrl)
-          .success(function(data) {
-            return data;
-          })
-          .error(function (err) {
-            console.log(err);
-            isLoading = false;
-          });
-      };
 
       function loadData(dbName) {
         getData(dbName)
@@ -274,8 +262,16 @@ angular.module('lmisChromeApp')
         }
       };
 
-      var db = readJSON();
-      loadNext(database.length);
+      $http.get('fixtures.json')
+        .success(function(data) {
+          db = data;
+          loadNext(database.length);
+        })
+        .error(function(reason) {
+          deferred.reject(reason);
+          isLoading = false;
+        });
+
       return deferred.promise;
     };
 
