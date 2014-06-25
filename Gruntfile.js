@@ -52,7 +52,7 @@ module.exports = function(grunt) {
       },
       fixtures: {
         files: ['fixtures/*.yaml'],
-        tasks: ['fixtures', 'concat:fixtures']
+        tasks: ['fixtures']
       }
     },
 
@@ -452,6 +452,7 @@ module.exports = function(grunt) {
     fixtures: {
       all: {
         options: {
+          dest: '<%= yeoman.app %>/fixtures.json',
           collections: '.tmp/collections.json'
         },
         files: [{
@@ -463,17 +464,10 @@ module.exports = function(grunt) {
       }
     },
 
-    concat: {
-      fixtures: {
-        src: '.tmp/fixtures/*.json',
-        dest: '<%= yeoman.app %>/fixtures.json'
-      }
-    },
-
     minjson: {
       fixtures: {
         files: {
-          '<%= yeoman.dist %>/fixtures.min.json': '<%= concat.fixtures.dest %>'
+          '<%= yeoman.dist %>/fixtures.min.json': '<%= fixtures.all.options.dest %>'
         }
       }
     }
@@ -490,7 +484,6 @@ module.exports = function(grunt) {
       'wiredep',
       'ngconstant:development',
       'fixtures',
-      'concat:fixtures',
       'concurrent:server',
       'autoprefixer',
       'connect:livereload',
@@ -522,7 +515,6 @@ module.exports = function(grunt) {
       'ngconstant:production',
       'chromeManifest:dist',
       'fixtures',
-      'concat:fixtures'
     ];
 
     var release = [

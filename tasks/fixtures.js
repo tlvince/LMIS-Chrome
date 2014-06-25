@@ -6,37 +6,38 @@ var changeCase = require('change-case');
 
 module.exports = function(grunt) {
 
+  var json = {};
   var collections = {};
   var loadYaml = function(path) {
     var data = grunt.file.read(path);
     return yaml.safeLoad(data, {
       filename: path,
     });
-  }
+  };
 
   grunt.registerMultiTask('fixtures', 'Load fixtures', function() {
     var options = this.options({
+      dest: '',
       collections: ''
     });
 
     this.files.forEach(function(filePair) {
       filePair.src.forEach(function(src) {
-        var dest = filePair.dest.replace(/\.ya?ml$/, '.json');
         var yaml = loadYaml(src);
 
         var basename = path.basename(src, '.yaml');
         var constant = changeCase.constantCase(basename);
         var collection = changeCase.camel(basename);
-        collections[constant] = collection;
 
-        var json = {};
         json[collection] = yaml;
-        json = JSON.stringify(json, null, 2);
-        grunt.file.write(dest, json);
-        grunt.log.writeln('Compiled ' + src.cyan + ' -> ' + dest.cyan);
-      })
-
+        grunt.log.writeln('Compiled ' + src.cyan);
+        collections[constant] = collection;
+      });
     });
+
+    json = JSON.stringify(json, null, 2);
+    grunt.file.write(options.dest, json);
+    grunt.log.writeln('Compiled ' + options.dest.cyan);
 
     if (options.collections) {
       collections = JSON.stringify(collections, null, 2);
