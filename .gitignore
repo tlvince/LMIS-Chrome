@@ -11,3 +11,4 @@ app/scripts/config.js
 build
 nbproject/private/
 app/fixtures.json
+app/scripts/db.js

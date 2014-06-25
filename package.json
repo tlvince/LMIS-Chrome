@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {},
   "devDependencies": {
+    "change-case": "^2.1.1",
     "eslint-no-exclusive-tests": "^0.1.0",
     "grunt": "~0.4.2",
     "grunt-autoprefixer": "~0.7.2",
@@ -37,7 +38,7 @@
     "grunt-usemin": "~2.1.0",
     "grunt-wiredep": "^1.7.0",
     "grunt-wiredep-copy": "^0.1.0",
-    "grunt-yaml": "^0.4.0",
+    "js-yaml": "^3.0.2",
     "jshint-stylish": "~0.2.0",
     "karma": "~0.12.1",
     "karma-coverage": "^0.2.0",

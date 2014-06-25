@@ -6,6 +6,9 @@ module.exports = function(grunt) {
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
+  // App-specific tasks
+  grunt.loadTasks('tasks');
+
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
@@ -49,7 +52,7 @@ module.exports = function(grunt) {
       },
       fixtures: {
         files: ['fixtures/*.yaml'],
-        tasks: ['yaml:fixtures', 'concat:fixtures']
+        tasks: ['fixtures', 'concat:fixtures']
       }
     },
 
@@ -365,7 +368,7 @@ module.exports = function(grunt) {
         constants: {
           config: grunt.file.readJSON('config/production.json')
         }
-      }
+      },
     },
 
     chromeManifest: {
@@ -446,8 +449,11 @@ module.exports = function(grunt) {
       src: '<%= jshint.all %>'
     },
 
-    yaml: {
-      fixtures: {
+    fixtures: {
+      all: {
+        options: {
+          collections: '.tmp/collections.json'
+        },
         files: [{
           expand: true,
           cwd: 'fixtures',
@@ -483,7 +489,7 @@ module.exports = function(grunt) {
       'clean:server',
       'wiredep',
       'ngconstant:development',
-      'yaml:fixtures',
+      'fixtures',
       'concat:fixtures',
       'concurrent:server',
       'autoprefixer',
@@ -515,7 +521,7 @@ module.exports = function(grunt) {
       'wiredep',
       'ngconstant:production',
       'chromeManifest:dist',
-      'yaml:fixtures',
+      'fixtures',
       'concat:fixtures'
     ];
 
