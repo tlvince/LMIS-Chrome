@@ -11,7 +11,7 @@ angular.module('lmisChromeApp', [
     'ngAnimate',
     'db'
   ])
-  .run(function(storageService, $rootScope, $state, $window, appConfigService, backgroundSyncService, fixtureLoaderService, growl, utility, pouchMigrationService, $log, i18n) {
+  .run(function(storageService, $rootScope, $state, $window, appConfigService, backgroundSyncService, fixtureLoaderService, growl, utility, pouchMigrationService, $log, i18n, chromeStorageApi, $q) {
 
     function navigateToHome() {
       $state.go('home.index.home.mainActivity');
@@ -84,9 +84,35 @@ angular.module('lmisChromeApp', [
       $log.error(err);
     }
 
+    function dumpChromeStorage() {
+      console.log('Chrome');
+      return chromeStorageApi.get(null, {
+        collection: true
+      });
+    }
+
+    function dumpPouch() {
+      console.log('Pouch');
+      var tables = storageService._COLLECTIONS;
+      var promises = {};
+      for (var i in tables) {
+        promises[tables[i]] = storageService.get(tables[i]);
+      }
+      return $q.all(promises);
+    }
+
+    function stringify(docs) {
+      var json = JSON.stringify(docs);
+      console.log(json);
+    }
+
     // TODO: see item:680
     if (utility.has($window, 'chrome')) {
       pouchMigrationService.migrate()
+        .then(dumpChromeStorage)
+        .then(stringify)
+        .then(dumpPouch)
+        .then(stringify)
         .then(loadAppConfig)
         .catch(migrationErrorHandler);
     } else {
