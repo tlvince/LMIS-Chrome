@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Factory: ccuBreakdownFactory', function() {
+xdescribe('Factory: ccuBreakdownFactory', function() {
 
   // load the service's module
   beforeEach(module('lmisChromeApp', 'i18nMocks'));
