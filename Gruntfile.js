@@ -331,7 +331,21 @@ module.exports = function(grunt) {
 
     protractor: {
       e2e: {
-        configFile: 'protractor.conf.js'
+        options: {
+          configFile: 'protractor.conf.js',
+          keepAlive: true
+        }
+      }
+    },
+
+    // jshint camelcase: false
+    /*eslint camelcase: 0 */
+    protractor_webdriver: {
+      e2e: {
+        options: {
+          command: './node_modules/protractor/bin/webdriver-manager start --standalone',
+          keepAlive: true
+        }
       }
     },
 
@@ -471,11 +485,14 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('test', function(target) {
-    grunt.task.run(['ngconstant:test']);
+    grunt.task.run('ngconstant:test');
     if (target === 'unit') {
       return grunt.task.run(['karma:unit']);
     } else if (target === 'e2e') {
-      return grunt.task.run(['protractor:e2e']);
+      return grunt.task.run([
+        'protractor_webdriver',
+        'protractor:e2e'
+      ]);
     }
 
     grunt.task.run([

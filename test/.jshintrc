@@ -18,6 +18,7 @@
     "jasmine": false,
     "spyOn": false,
     "runs": false,
-    "waitsFor": false
+    "waitsFor": false,
+    "protractor": false
   }
 }
