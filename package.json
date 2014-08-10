@@ -51,6 +51,7 @@
     "node": "0.10.x"
   },
   "scripts": {
+    "install": "./node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update",
     "test": "grunt travis",
     "test-watch": "./node_modules/karma/bin/karma start --autoWatch true --singleRun false"
   },

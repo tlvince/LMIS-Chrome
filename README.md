@@ -42,13 +42,7 @@ useful to automatically re-run the tests when a file changes.
 
 ### e2e
 
-1. Install selenium (one-time only):
-
-    ```bash
-    ./node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update
-    ```
-
-2. `grunt test:e2e`
+`grunt test:e2e`
 
 ## Author
 
